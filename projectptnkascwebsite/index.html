@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTNKASC</title>
+    <style>
+        body{
+            background-image:url('Background.jpg');
+            margin:0;
+            overflow-x: hidden;
+        }
+        @keyframes appear{
+            0%{
+                transform:scale(0);
+            }
+            100%{
+                transform:scale(1);
+            }
+        }
+        .background{
+            z-index:-1;
+            position:absolute;
+            pointer-events: none;
+            top:0;
+            bottom:0;
+            width:100vw;
+            height:100vh;
+
+        }
+        .background img{
+            position:absolute;
+            margin:auto;
+            animation:2s ease-in-out 0s appear;
+        }
+        #earth {
+            content: url('earth.png');
+            width: 40vw;
+            left:30vw;
+            top:10%;
+            z-index: -1;
+        }
+        #moon{
+            content:url('moon.png');
+            width:10vw;
+            left:5vw;
+            top:10%;
+        }
+        #spacestation{
+            content:url('spacestation.png');
+            width:25vw;
+            left:60vw;
+            top:45%;
+            transform:rotateZ(30deg);
+            z-index:1;
+        }
+        #astronaut{
+            content:url('astronaut.png');
+            width:20vw;
+            left:60vw;
+            top:50%;
+            z-index:2;
+        }
+        #centerLogo{
+            content:url('ptnkasclogoBig.png');
+            width:45vw;
+            left:30vw;
+            z-index:0;
+        }
+        #cornerLogo{
+            position:sticky;
+            content:url('ptnkasclogoSmall.png');
+            width:15vw;
+            height:10vh;
+            top:0;
+            left:0;
+        }
+        #topbar{
+            display:grid;
+            position:sticky;
+            top:0;
+            grid-template-columns: repeat(4,auto);
+            gap:5vw;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #topbar div{
+            width:fit-content;
+            min-width:5vw;
+            height:fit-content;
+            min-height: 5vh;
+            font-size:3vw;
+            background: linear-gradient(to right,#114db2 0%,#c56be5 100%);
+            color:white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bolder;
+            border-radius:10%;
+            user-select: none;
+            border: 3px solid white; 
+            background-clip: text; 
+            -webkit-background-clip: text;
+            color: transparent;
+            transition-duration: 0.5s;
+        }
+        #topbar div:hover{
+                transform: scale(1.1);
+        }
+        #slogan{
+            user-select: none;
+            font-size: 2.5vw;
+            font-family: 'Courier New', Courier, monospace;
+            word-spacing: 1vw;
+            color:white;
+            left:30%;
+            bottom:0;
+            position:absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <img id="spacestation">
+        <img id="moon">
+        <img id="centerLogo">
+        <img id="earth">
+        <img id="astronaut">
+
+    </div>
+    <img id="cornerLogo">
+    <div id="topbar">
+        <!-- buttons will be dynamically generated here :D check script-->
+    </div>
+    <p id="slogan"></p>
+    <div style="height:1000vh"></div>
+</body>
+<script>
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const backgroundImages = {
+        id: ['earth', 'moon', 'astronaut', 'spacestation', 'centerLogo'],
+        parallaxValue: [0.005, 0.01, 0.3, 0.15, 0.05]
+    };
+    const topbar = document.getElementById('topbar');
+    const topBarButtons = {
+        label: ['About Us', 'Photos & Events', 'Apply'],
+        section: [10, 20, 30] //in percentage
+    };
+    
+    // Move the event listener setup outside the loop
+    window.onmousemove = (e) => {
+        let pos={x:e.clientX,y:e.clientY};
+        for (let i = 0; i < backgroundImages.id.length; i++) {
+            let object = document.getElementById(backgroundImages.id[i]);
+            let objectPos=object.getBoundingClientRect();
+            object.style.transform=`translateX(${-pos.x*backgroundImages.parallaxValue[i]}px) translateY(${-pos.y*backgroundImages.parallaxValue[i]}px)`;
+        }
+
+    };
+    
+    for (let i = 0; i < topBarButtons.label.length; i++) {
+        const button = document.createElement('div');
+        button.textContent = topBarButtons.label[i];
+        button.onclick = () => {
+            window.scrollTo({
+                top: document.documentElement.scrollHeight * topBarButtons.section[i] / 100,
+                behavior: "smooth"
+            });
+        };
+        topbar.appendChild(button);
+    }
+    typewriter('slogan',"We go far above and beyond.");
+    function typewriter(id="",text="Text",time=100){
+        let i=0;
+        let tempText="";
+        const object=document.getElementById(id);
+        object.textContent="";
+    const typingInterval=setInterval(()=>{
+    tempText+=text.charAt(i);
+    object.textContent=tempText;
+    i++;
+    if(i>=text.length)clearInterval(typingInterval);
+    }
+    ,time
+    );
+    }
+</script>
+</html>

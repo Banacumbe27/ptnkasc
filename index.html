@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTNKASC</title>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <style>
+        body{
+            overflow-x: hidden;
+            overflow-y:hidden;
+            background:url(background.webp);
+        }
+        #smallLogo{
+            background:url(ptnkasclogoSmall.webp);
+            width:15vmax;
+            height:5vmax;
+            background-size:cover;
+            cursor:pointer;
+        }
+        #bigLogo {
+            --size: 50vmax;
+            position: absolute;
+            background: url(ptnkasclogoBig.webp);
+            left: calc(50vw - var(--size) / 2);
+            top: calc(50vh - var(--size) / 2);
+            width: var(--size);
+            height: var(--size);
+            background-size: cover;
+            transition:1s ease-in-out;
+        }
+        
+        #earth{
+            position:absolute;
+            background:url(earth.webp);
+            background-size: cover;
+            width:60vmax;
+            height:60vmax;
+            top:50vh;
+            left:60vw;
+            transition:1s;
+
+        }
+        #moon{
+            position:absolute;
+            background:url(moon.webp);
+            background-size: cover;
+            width:15vmax;
+            height:15vmax;
+            top:10vh;
+            left:5vw;
+            transition:1s;
+        }
+     
+        #navBar{
+            display:flex;
+            background-color:rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            position:fixed;
+            top:0;
+            width:100vw;
+            height:fit-content;
+            gap: 2vw; 
+            z-index:10000;
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+        }
+        .navBarbutton{
+            width:fit-content;
+            height:fit-content;
+            font-size:3vmax;
+            background: linear-gradient(to right,#A3C972 0%,#F35506 25%,#F7D600 75%,#FFFFFF 100%);
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bolder;
+            border:solid white;
+            border-radius:10%;
+            user-select: none;
+            background-clip: text; 
+            -webkit-background-clip: text;
+            color: transparent;
+            text-align: center;
+            -webkit-transition-duration: 0.5s;
+            transition-duration: 0.5s;
+            z-index:0;
+            cursor:pointer;
+        }
+        #navBar div:before{
+            background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10%;
+            border:1px solid (rgba(255,255,255,0.18));
+            box-shadow: 0 8px 32px 0 rgba(255,255,255,0.37);
+            z-index:0;
+
+        }
+        #navBar div:hover{
+            transform: scale(1.1);
+            
+        }
+        .pressed {
+            background: white;
+            color: black;
+            pointer-events: none;
+        }
+     
+        @keyframes scroll-indicate{
+            0%{
+                opacity:0;
+                transform:translateY(0%) rotate(45deg);
+
+            }
+            50%{
+                opacity:1;
+                transform:translateY(50%) rotate(45deg);
+            }
+            100%{
+                opacity:0;
+                transform:translateY(0%) rotate(45deg);
+
+            }
+        }
+        @keyframes fade-in{
+            0%{
+                opacity:0;
+                scale:0;
+            }
+            100%{
+                opacity:1;
+                scale:1;
+            }
+        }
+        @keyframes pulsate{
+            0%{
+                scale:1;
+                border-bottom: 20px solid white;
+                border-right: 20px solid white;
+            }
+            90%{
+                scale:1.5;
+                border-bottom: 20px solid red;
+                border-right: 20px solid red;
+            }
+            100%{
+                scale:1;
+                border-bottom: 20px solid white;
+                border-right: 20px solid white;
+            }
+        }
+        .aboutus{
+            display:none;
+        }
+       
+        .aboutus-text {
+            user-select: none;
+            color: white;
+            font-size: 10vmax;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -90%);
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            text-align: center;
+        }
+
+        .aboutus-scrollindicators{
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            height:fit-content;
+            width:fit-content;
+            align-content: center;
+   
+        }
+        .aboutus-scrollindicators span{/*scroll indicator arrows*/
+            display:block;
+            width:5vmax;
+            height:5vmax;
+            border-bottom:10px solid white;
+            border-right:10px solid white;
+            transform:rotate(45deg);
+            animation:2s scroll-indicate infinite;
+            margin-bottom:-3vmax;
+        }
+        .aboutus span:nth-child(2){
+            animation-delay:-.2s;
+        }
+        .aboutus span:nth-child(1){
+            animation-delay:-.4s;
+        }
+        .aboutus-content{
+            position:absolute;
+            top:70vh;
+            left:0;
+            width:100vw;
+            height:100vh;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation:fade-in;
+            animation-timeline:view(95% 0%);
+            color:white;
+            font-size:5vmax;
+            font-family: 'Courier New', Courier, monospace;
+            text-align:center;
+            
+        }
+        .aboutus-content p{
+            position:relative;
+            user-select: none;
+            --shown:0;
+        }
+     
+        .aboutus-img1{
+            position:relative;
+            margin-top:10vh;
+            left:50%;
+            transform:translateX(-50%); 
+            height:60vw;
+            width:100vw;
+            background-image:url("fancy_image_gallery/gallery8.webp");
+            background-size:cover;
+            z-index:-1;
+            box-shadow:0 0 5vmax 10px yellow;
+            transition-duration:0.5s;
+        }
+        .aboutus-goals{
+            display:grid;
+            grid-template-columns:repeat(1,100vw);
+            grid-template-rows:repeat(6,fit-content);
+            row-gap: 0;
+            align-items: center;
+        }
+        .aboutus-goals-gallery{
+            margin-left:25vw;
+            display:flex;
+            gap:25vw;
+            flex-direction: row;
+            width:fit-content;
+            height:fit-content;
+            transition-duration:0.5s;
+
+        }
+        .aboutus-goals span{/*nav arrows for the gallery*/
+            border-bottom:1vmax solid white;
+            border-right:1vmax solid white;
+            width:5vmax;
+            height:5vmax;
+            display:block;
+            position:absolute;
+            margin-top:20%;
+            cursor:pointer;
+            transition-duration:0.1s;
+            z-index:500;
+            animation:5s pulsate infinite;
+        }
+        .aboutus-goals-left{
+            transform:rotate(135deg);
+            left:10vw;
+        }
+        .aboutus-goals-right{
+            transform:rotate(-45deg);
+            right:10vw;
+        
+        }
+        .aboutus-goals-img{
+            width:50vw;
+            height:30vw;
+            margin:none;
+            box-shadow:0 0 5vmax 10px yellow;
+
+            
+        }   
+        .aboutus-moon {
+            scale:0;
+        }
+        
+        .aboutus-earth {
+            scale:0;
+        }
+        
+        .aboutus-bigLogo{
+            transform:translateY(150vmax);
+            opacity:0;
+            pointer-events: none;
+        }
+           
+        .photosevents{
+            display:none;
+        }
+        .photosevents-eventbox{
+            position:absolute;
+            display:flex;
+            flex-direction: column;
+            left:10vw;
+            top:20vmin;
+            gap:1vmin;
+            width:40vw;
+            height:fit-content;
+            background:rgba(255,255,255,0.4);
+            color:white;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size:3vmax;
+            text-align:center;
+            align-content: center;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+        }
+        .photosevents-eventbox>*{
+            margin:0;
+            padding:none;
+        }
+        .photosevents-photogal{
+            
+        }
+        .photosevents-eventbox-container {
+            width:40vw;
+        }
+        
+        .photosevents span{
+            border-bottom:1vmax solid white;
+            border-right:1vmax solid white;
+            width:5vmax;
+            height:5vmax;
+            display:block;
+            position:absolute;
+            margin-top:40vmin;
+            cursor:pointer;
+            z-index:500;
+        }
+        .photosevents-left{
+            transform:rotate(135deg);
+            left:10vw;
+        }
+        .photosevents-right{
+            transform:rotate(-45deg);
+            left:40vw;
+        }
+        .photosevents-moon{
+            position:absolute;
+            left:50%;
+            top:10%;
+            transform:translate(70vw,0);
+        }
+        .photosevents-earth{
+            position:absolute;
+            transform:translate(-70%,0)
+        }
+        .photosevents-bigLogo{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+   <div id="earth"></div>
+   <div id="moon"></div>
+   <div id="bigLogo"></div>
+    <div id="navBar">
+        <div id="smallLogo"></div>
+    </div>
+    <section class="aboutus">
+        <div class="aboutus-text"></div>
+        <div class="aboutus-scrollindicators">
+        <span></span>
+        <span></span>
+        <span></span>
+        </div>
+        <div class="aboutus-content">
+            <div style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;color:skyblue">
+                XIN CHÀO!
+            </div>
+            <p>
+            Chúng mình là PTNK Astronomy Club, một câu lạc bộ thiên văn học trực thuộc trường Phổ thông Năng khiếu, ĐHQG-HCM.
+            </p> 
+        <div class="aboutus-img1"></div>
+        <div style="font-weight:bolder;margin-top:10vmax;margin-bottom:10vmax;color:red;">SỨ MỆNH CỦA CHÚNG MÌNH</div>
+        <div class="aboutus-goals">
+        <div>
+        <span class="aboutus-goals-left" onclick="aboutus_goals_gallery('left')"></span>
+        <span class="aboutus-goals-right"onclick="aboutus_goals_gallery('right')"></span>
+        <p style="font-size:3vmax;font-weight:bold;z-index:10;margin-top:-10%;">Tạo môi trường phát triển đam mê thiên văn cho các bạn học sinh ở mọi miền đất nước!</p>
+
+            <div class="aboutus-goals-gallery">
+        <img src="images/aboutus-goals-img1.webp" class="aboutus-goals-img">
+        <img src="images/aboutus-goals-img2.webp" class="aboutus-goals-img">
+        <img src="images/aboutus-goals-img3.webp" class="aboutus-goals-img">
+        </div>
+        <p id="gallery-caption">Khóa học thiên văn, PTNK TĐ</p>
+    </div>
+    </section>
+    <section class="photosevents">
+        <div class="container" >
+            <span class="photosevents-left"></span>
+            <span class="photosevents-right"></span>
+        <div class="photosevents-eventbox">
+            <p style="font-size:4vmax;font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">LOADING...</p>
+            <p>✔️LOADING...</p>
+            <p>📅LOADING...</p>
+            <p>📍LOADING...</p>
+            <p>🎯LOADING...</p>
+            <pre>📝LOADING...</pre>
+        </div>
+        </div>
+        <div class></div>
+    </section>
+</body>
+<script>
+//backend related stuff
+webApp_id='AKfycbyJhiY_H9-xZlHzZGKQAGivQJ92zRB83NiQmZ8ui8P3vQh0jKe5DY0dTwhGCsULX9pI';
+webApp_url=`https://script.google.com/macros/s/${webApp_id}/exec`
+const eventBox=document.querySelector('.photosevents-eventbox');
+function loadEvents(){
+fetch(webApp_url)
+.then(response=>response.JSON())
+.then(data=>{
+
+});
+}
+
+
+//frontend related stuff
+setTimeout(()=>{
+    
+window.scrollTo(0,0);
+},250);
+    const navBar = document.getElementById('navBar');
+    const navBarButtons = {
+        label: ['Home','About Us', 'Photos & Events', 'Apply'],
+    
+    };    
+    let lastid;
+    function generateNavBar(){
+    for (let i = 0; i < navBarButtons.label.length; i++) {
+        const button = document.createElement('div');
+        button.textContent = navBarButtons.label[i];
+        button.id=i;
+        button.classList.add('navBarbutton');
+        if(button.textContent=='Home'){button.classList.add('pressed');
+        lastid=i;
+    }
+        button.onclick = () => {
+           open(i);
+        };
+        navBar.appendChild(button);
+    }
+}
+generateNavBar();
+let activePage='home';
+// means the home button
+const bigLogo=document.querySelector('#bigLogo');
+const earth=document.querySelector('#earth');
+const moon=document.querySelector('#moon');//note make last button turn off when pressing other
+
+function open(id){//opens sections
+document.querySelectorAll('.navBarbutton')[lastid].classList.remove('pressed');
+lastid=id;
+let pressedButton=document.querySelectorAll(".navBarbutton")[id];
+lastButton=pressedButton;
+if(pressedButton.textContent=='Home'){
+    document.querySelectorAll('.aboutus-content p').forEach(ele=>{ele.style.setProperty('--shown','0');});
+    moon.classList.remove(`${activePage}-moon`);
+    earth.classList.remove(`${activePage}-earth`);
+    bigLogo.classList.remove(`${activePage}-bigLogo`);
+    document.querySelector(`.${activePage}`).style.display='none';
+    document.body.style.overflowY='hidden';    
+    activePage='home'
+}
+if(pressedButton.textContent=='About Us'){
+    if(document.querySelector(`.${activePage}`)!=null)
+    document.querySelector(`.${activePage}`).style.display='none';
+    moon.classList.remove(`${activePage}-moon`);
+    earth.classList.remove(`${activePage}-earth`);
+    bigLogo.classList.remove(`${activePage}-bigLogo`);
+activePage='aboutus';
+textEffect(document.querySelector(`.${activePage}-text`),'ABOUT US');
+document.body.style.overflowY='visible';    
+}
+if(pressedButton.textContent=='Photos & Events'){
+    if(document.querySelector(`.${activePage}`)!=null)
+    document.querySelector(`.${activePage}`).style.display='none';
+    moon.classList.remove(`${activePage}-moon`);
+    earth.classList.remove(`${activePage}-earth`);
+    bigLogo.classList.remove(`${activePage}-bigLogo`);
+    activePage='photosevents';
+    document.body.style.overflowY='hidden';
+}
+
+window.scrollTo(0,0);
+pressedButton.classList.add('pressed');
+if(document.querySelector(`.${activePage}`)!=null)
+document.querySelector(`.${activePage}`).style.display='block';
+moon.classList.add(`${activePage}-moon`);
+earth.classList.add(`${activePage}-earth`);
+bigLogo.classList.add(`${activePage}-bigLogo`);
+
+}
+
+const aboutus_content_observer=new IntersectionObserver(
+(entries,observer)=>{
+    entries.forEach(entry=>{
+        if(entry.isIntersecting && getComputedStyle(entry.target).getPropertyValue('--shown')=='0'){
+            textEffect(entry.target,entry.target.textContent,10,'typewriter');
+            entry.target.style.setProperty('--shown','1');
+        }
+        else entry.target.visibility='hidden';
+    });
+}    
+);
+const aboutus_textcontents=document.querySelectorAll('.aboutus-content p');
+aboutus_textcontents.forEach(para=>{aboutus_content_observer.observe(para)});
+/*function close(activePage,buttonid){
+}*/
+let gallery_page=0;
+let img_count=document.querySelectorAll('.aboutus-goals-gallery img').length;
+let auto_gallery_roll;
+const display_gallery=new IntersectionObserver(
+    (entries,observer)=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){
+                auto_gallery_roll=setInterval(()=>{aboutus_goals_gallery('right');
+                },10000);
+            }
+            else {
+                clearInterval(auto_gallery_roll);
+                gallery_page=0;
+            }
+    });
+    }    
+    );
+    let gallery_ele=document.querySelector('.aboutus-goals-gallery');
+    display_gallery.observe(gallery_ele);
+    let gallery_captions=['Khóa học thiên văn, PTNK TĐ', 'Workshop chạm sóng, PTNK Q5','Giao lưu thiên văn, Bình Thuận']
+function aboutus_goals_gallery(direction){
+    let gallery_caption=document.querySelector('#gallery-caption');
+    if(direction=='left' && gallery_page>0){
+        gallery_page--;
+        
+    }
+    if(direction=='right'){
+        gallery_page++;
+    if(gallery_page>=img_count)gallery_page=0;
+    }
+    gallery_ele.style.transform=`translateX(${-(100-50*(document.querySelectorAll('.aboutus-goals-img')[0].clientWidth/window.innerWidth))
+        *gallery_page}vw)`;
+    textEffect(gallery_caption,gallery_captions[gallery_page],10,'typewriter');
+
+}
+
+function textEffect(object,text,interval=100,style='symbols'){//symbols, typewriter
+//41-51 means random symbols #$%^
+let cursor=0;
+object.textContent='';
+if(style=='symbols'){
+let moveCursor=setInterval(()=>{
+    object.textContent='';
+    for(let i=0;i<text.length;i++){
+        if(i>cursor)object.textContent+=String.fromCharCode(Math.floor(Math.random()*5)+33);
+        else object.textContent+=text[i];
+    }
+    cursor++;
+    if(cursor==text.length)clearInterval(moveCursor);   
+    },interval);
+}
+if(style=='typewriter'){
+    let tempText='';
+    for(let i=0;i<text.length;i++){
+        setTimeout(()=>{
+        tempText+=text[i];
+        object.textContent=tempText+'█';},i*interval);
+    }
+    setTimeout(()=>{object.textContent=tempText},text.length*interval);
+}
+
+
+}
+</script>
+</html>

@@ -6,10 +6,11 @@
     <title>PTNKASC</title>
     <link rel="icon" type="image/x-icon" href="icon.ico">
     <style>
-        body,html{
+        body{
             overflow-x: hidden;
             overflow-y:hidden;
             background:url(background.webp);
+            max-width:100%;
         }
         #smallLogo{
             background:url(ptnkasclogoSmall.webp);
@@ -20,7 +21,7 @@
         }
         #bigLogo {
             --size: 50vmax;
-            position: absolute;
+            position: fixed;
             background: url(ptnkasclogoBig.webp);
             left: calc(50vw - var(--size) / 2);
             top: calc(50vh - var(--size) / 2);
@@ -31,7 +32,7 @@
         }
         
         #earth{
-            position:absolute;
+            position:fixed;
             background:url(earth.webp);
             background-size: cover;
             width:60vmax;
@@ -42,7 +43,7 @@
 
         }
         #moon{
-            position:absolute;
+            position:fixed;
             background:url(moon.webp);
             background-size: cover;
             width:15vmax;
@@ -314,6 +315,12 @@
             margin:0;
             padding:none;
         }
+        .photosevents-eventbox a{
+            text-decoration: none;
+            font-size:2vmax;
+            color:blue;
+            font-weight:bolder;
+        }
         .photosevents-photogal{
             
         }
@@ -353,6 +360,10 @@
         .photosevents-bigLogo{
             display:none;
         }
+        .container{
+            overflow:hidden;
+            display:flow-root;
+        }
     </style>
 </head>
 <body>
@@ -383,19 +394,15 @@
         <span class="aboutus-goals-left" onclick="aboutus_goals_gallery('left')"></span>
         <span class="aboutus-goals-right"onclick="aboutus_goals_gallery('right')"></span>
         <p style="font-size:3vmax;font-weight:bold;z-index:10;margin-top:-10%;">Tạo môi trường phát triển đam mê thiên văn cho các bạn học sinh ở mọi miền đất nước!</p>
-
+            <div class="container">
             <div class="aboutus-goals-gallery">
-        <img src="aboutus-goals-img1.webp" class="aboutus-goals-img">
-        <img src="aboutus-goals-img2.webp" class="aboutus-goals-img">
-        <img src="aboutus-goals-img3.webp" class="aboutus-goals-img">
         </div>
-        <p id="gallery-caption">Khóa học thiên văn, PTNK TĐ</p>
+            </div>
+        <!-- <p id="gallery-caption">Khóa học thiên văn, PTNK TĐ</p> -->
     </div>
     </section>
     <section class="photosevents">
         <div class="container" >
-            <span class="photosevents-left"></span>
-            <span class="photosevents-right"></span>
         <div class="photosevents-eventbox">
             <p style="font-size:4vmax;font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">LOADING...</p>
             <p>✔️LOADING...</p>
@@ -403,9 +410,9 @@
             <p>📍LOADING...</p>
             <p>🎯LOADING...</p>
             <pre>📝LOADING...</pre>
+            <h3><a href="">Previous</a>.......<a href=''>Next</a></h3>
         </div>
         </div>
-        <div class></div>
     </section>
 </body>
 <script>
@@ -454,7 +461,9 @@ let activePage='home';
 const bigLogo=document.querySelector('#bigLogo');
 const earth=document.querySelector('#earth');
 const moon=document.querySelector('#moon');//note make last button turn off when pressing other
-
+window.onscroll=(e)=>{
+    console.log(e);
+}
 function open(id){//opens sections
 document.querySelectorAll('.navBarbutton')[lastid].classList.remove('pressed');
 lastid=id;
@@ -515,7 +524,6 @@ aboutus_textcontents.forEach(para=>{aboutus_content_observer.observe(para)});
 /*function close(activePage,buttonid){
 }*/
 let gallery_page=0;
-let img_count=document.querySelectorAll('.aboutus-goals-gallery img').length;
 let auto_gallery_roll;
 const display_gallery=new IntersectionObserver(
     (entries,observer)=>{
@@ -534,6 +542,16 @@ const display_gallery=new IntersectionObserver(
     let gallery_ele=document.querySelector('.aboutus-goals-gallery');
     display_gallery.observe(gallery_ele);
     let gallery_captions=['Khóa học thiên văn, PTNK TĐ', 'Workshop chạm sóng, PTNK Q5','Giao lưu thiên văn, Bình Thuận']
+    let gallery_imgs=['aboutus-goals-img1.webp','aboutus-goals-img2.webp','aboutus-goals-img3.webp'];
+    for(let i=0;i<gallery_imgs.length;i++){
+        let img=document.createElement('img');
+        img.style.transition='0.5s';
+        img.src=gallery_imgs[i];
+        img.classList.add('aboutus-goals-img');
+        gallery_ele.appendChild(img);   
+    }
+let img_count=document.querySelectorAll('.aboutus-goals-gallery img').length;
+
 function aboutus_goals_gallery(direction){
     let gallery_caption=document.querySelector('#gallery-caption');
     if(direction=='left' && gallery_page>0){
@@ -546,6 +564,15 @@ function aboutus_goals_gallery(direction){
     }
     gallery_ele.style.transform=`translateX(${-(100-50*(document.querySelectorAll('.aboutus-goals-img')[0].clientWidth/window.innerWidth))
         *gallery_page}vw)`;
+        let images=document.querySelectorAll('.aboutus-goals-img');
+        for(let i=0;i<gallery_imgs.length;i++){
+            if(i!=gallery_page){
+            images[i].style.scale='0';
+            }
+            else{
+            images[i].style.scale='1';
+        }
+        }
     textEffect(gallery_caption,gallery_captions[gallery_page],10,'typewriter');
 
 }

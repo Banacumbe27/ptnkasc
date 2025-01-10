@@ -666,7 +666,6 @@ if(style=='typewriter'){
 }
 function copy(nth){
     let content=document.querySelectorAll('.aboutus-contacts a')[nth].textContent;
-    navigator.clipboard.writeText(content);
     window.location.href=`tel:${content}`
 }
 </script>

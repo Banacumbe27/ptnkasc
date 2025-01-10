@@ -136,18 +136,18 @@
         @keyframes pulsate{
             0%{
                 scale:1;
-                border-bottom: 20px solid white;
-                border-right: 20px solid white;
+                border-bottom: 10px solid white;
+                border-right: 10px solid white;
             }
             90%{
                 scale:1.5;
-                border-bottom: 20px solid red;
-                border-right: 20px solid red;
+                border-bottom: 10px solid red;
+                border-right: 10px solid red;
             }
             100%{
                 scale:1;
-                border-bottom: 20px solid white;
-                border-right: 20px solid white;
+                border-bottom: 10px solid white;
+                border-right: 10px solid white;
             }
         }
         .aboutus{
@@ -275,6 +275,28 @@
 
             
         }   
+        .aboutus-contacts{
+            display:flex;
+            flex-direction: row;
+            width:100vw;
+            height:fit-content;
+            padding:none;
+            background:black;
+            margin-top:20vmin;
+            justify-content: center;
+            
+        }
+        .aboutus-contacts img{/*social media buttons*/
+            border-radius:50%;
+            width:8vmax;
+            height:8vmax;
+            box-shadow:0 0 1vmax 10px black;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .aboutus-contacts img:active{
+            scale:0.7;
+        }
         .aboutus-moon {
             scale:0;
         }
@@ -321,13 +343,9 @@
             color:blue;
             font-weight:bolder;
         }
-        .photosevents-photogal{
+       /* .photosevents-photogal{
             
-        }
-        .photosevents-eventbox-container {
-            width:40vw;
-        }
-        
+        }*/
         .photosevents span{
             border-bottom:1vmax solid white;
             border-right:1vmax solid white;
@@ -364,6 +382,32 @@
             overflow:hidden;
             display:flow-root;
         }
+        @media screen and (max-width:600px) {
+            .aboutus-goals span{/*nav arrows for the gallery*/
+            margin-top:20vmax;
+            width:2vmax;
+            height:2vmax;
+        }
+        .aboutus-goals-img{
+            width:80vw;
+            height:48vw;
+            margin:none;
+            box-shadow:0 0 5vmax 10px yellow;
+
+            
+        }   
+        .aboutus-goals-gallery{
+            margin-left:10vw;
+            display:flex;
+            gap:10vw;
+            flex-direction: row;
+            width:fit-content;
+            height:fit-content;
+            transition-duration:0.5s;
+
+        }
+
+        }
     </style>
 </head>
 <body>
@@ -396,6 +440,10 @@
         <p style="font-size:3vmax;font-weight:bold;z-index:10;margin-top:-10%;">Tạo môi trường phát triển đam mê thiên văn cho các bạn học sinh ở mọi miền đất nước!</p>
             <div class="container">
             <div class="aboutus-goals-gallery">
+        </div>
+        <div class="aboutus-contacts">
+            <img src="phone_icon.webp">
+            <img src="facebook_icon.webp">
         </div>
             </div>
         <!-- <p id="gallery-caption">Khóa học thiên văn, PTNK TĐ</p> -->
@@ -461,9 +509,6 @@ let activePage='home';
 const bigLogo=document.querySelector('#bigLogo');
 const earth=document.querySelector('#earth');
 const moon=document.querySelector('#moon');//note make last button turn off when pressing other
-window.onscroll=(e)=>{
-    console.log(e);
-}
 function open(id){//opens sections
 document.querySelectorAll('.navBarbutton')[lastid].classList.remove('pressed');
 lastid=id;
@@ -562,7 +607,8 @@ function aboutus_goals_gallery(direction){
         gallery_page++;
     if(gallery_page>=img_count)gallery_page=0;
     }
-    gallery_ele.style.transform=`translateX(${-(100-50*(document.querySelectorAll('.aboutus-goals-img')[0].clientWidth/window.innerWidth))
+    let image_vw=100*(document.querySelectorAll('.aboutus-goals-img')[0].clientWidth/window.innerWidth);
+    gallery_ele.style.transform=`translateX(${-(50+(image_vw)/2)
         *gallery_page}vw)`;
         let images=document.querySelectorAll('.aboutus-goals-img');
         for(let i=0;i<gallery_imgs.length;i++){
@@ -577,7 +623,7 @@ function aboutus_goals_gallery(direction){
 
 }
 
-function textEffect(object,text,interval=100,style='symbols'){//symbols, typewriter
+function textEffect(object,text,interval=100,style='symbols'){
 //41-51 means random symbols #$%^
 let cursor=0;
 object.textContent='';

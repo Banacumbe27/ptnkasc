@@ -286,6 +286,14 @@
             justify-content: center;
             
         }
+        .aboutus-contacts pre{
+            font-size:3vmax;
+            user-select: none;
+        }
+        .aboutus-contacts a{
+            color:white;
+            font-size:5vmax;
+        }
         .aboutus-contacts img{/*social media buttons*/
             border-radius:50%;
             width:8vmax;
@@ -441,12 +449,17 @@
             <div class="container">
             <div class="aboutus-goals-gallery">
         </div>
+        <p id="gallery-caption">Khóa học thiên văn, PTNK TĐ</p> 
         <div class="aboutus-contacts">
             <img src="phone_icon.webp">
-            <img src="facebook_icon.webp">
+            <div style="display:flex;flex-direction: column;gap:none;">
+               <pre> <a href="javascript:copy(0)">0981536598</a>(Anh Minh)</pre>
+               <pre> <a href="javascript:copy(1)">0336890511</a>(Quang Phú)</pre>
+            </div>
+
+            <a href="https://www.facebook.com/profile.php?id=61550087131348"><img src="facebook_icon.webp"></a>
         </div>
             </div>
-        <!-- <p id="gallery-caption">Khóa học thiên văn, PTNK TĐ</p> -->
     </div>
     </section>
     <section class="photosevents">
@@ -465,16 +478,19 @@
 </body>
 <script>
 //backend related stuff
-webApp_id='AKfycbyJhiY_H9-xZlHzZGKQAGivQJ92zRB83NiQmZ8ui8P3vQh0jKe5DY0dTwhGCsULX9pI';
+webApp_id='AKfycbwr9DixnTc4TVItUUMOGRaRu0ZKSTT7DUibvlXhAEq0lrOwrHQpv4Fx6ai6FjDBRonP';
 webApp_url=`https://script.google.com/macros/s/${webApp_id}/exec`
+let eventData;
 const eventBox=document.querySelector('.photosevents-eventbox');
 function loadEvents(){
 fetch(webApp_url)
-.then(response=>response.JSON())
+.then(response=>response.json())
 .then(data=>{
-
+console.log(data);
+eventData=data;
 });
 }
+loadEvents();
 
 
 //frontend related stuff
@@ -619,7 +635,7 @@ function aboutus_goals_gallery(direction){
             images[i].style.scale='1';
         }
         }
-    textEffect(gallery_caption,gallery_captions[gallery_page],10,'typewriter');
+    gallery_caption.textContent=gallery_captions[gallery_page];
 
 }
 
@@ -647,8 +663,11 @@ if(style=='typewriter'){
     }
     setTimeout(()=>{object.textContent=tempText},text.length*interval);
 }
-
-
+}
+function copy(nth){
+    let content=document.querySelectorAll('.aboutus-contacts a')[nth].textContent;
+    navigator.clipboard.writeText(content);
+    window.location.href=`tel:${content}`
 }
 </script>
 </html>
